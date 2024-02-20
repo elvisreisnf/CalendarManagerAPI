@@ -14,6 +14,8 @@ namespace CalendarManager.Application.Mapper
             CreateMap<CreateEventCommand, Event>().ForMember(dest => dest.Type, opt => opt.Ignore());
             CreateMap<EventType, short>().ConvertUsing(e => (short)e);
             CreateMap<short, EventType>().ConvertUsing(s => (EventType)s);
+
+            CreateMap<User, UserDto>();
         }
     }
 

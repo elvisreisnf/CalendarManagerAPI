@@ -14,18 +14,9 @@ namespace CalendarManager.Infraestructure.Context
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-
         }
 
         public DbSet<Event> Event { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            var converter = new EnumToNumberConverter<EventType, int>();
-
-            modelBuilder.Entity<Event>()
-                .Property(e => e.Type)
-                .HasConversion(converter);
-        }
+        public DbSet<User> User { get; set; }
     }
 }

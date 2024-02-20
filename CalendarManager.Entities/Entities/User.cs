@@ -4,10 +4,9 @@ namespace CalendarManager.Entities.Entities
 {
     public class User
     {
-        public User(string name, string login, string password)
+        public User( string username, string password)
         {
-            Name = name;
-            Login = login;
+            Username = username;
             Password = password;
         }
 
@@ -15,13 +14,16 @@ namespace CalendarManager.Entities.Entities
         public int Id { get; private set; }
 
         [Required]
-        public string Name { get; private set; }
-
-        [Required]
-        public string Login { get; private set; }
+        public string Username { get; private set; }
 
         [Required]
         public string Password { get; private set; }
+
+        public User HidePassword(string password)
+        {
+            Password = password;
+            return this;
+        }
 
     }
 }

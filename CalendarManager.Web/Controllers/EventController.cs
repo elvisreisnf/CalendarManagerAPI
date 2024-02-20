@@ -3,12 +3,15 @@ using CalendarManager.Application.Command;
 using CalendarManager.Entities.DTOs;
 using CalendarManager.Entities.Entities;
 using CalendarManager.Infraestructure.Context;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Tracing;
 
 namespace GerenciadorAgenda.Controllers
 {
     [ApiController]
     [Route("api/events")]
+    [Authorize]
     public class EventController : ControllerBase
     {
         private readonly IMapper _mapper;

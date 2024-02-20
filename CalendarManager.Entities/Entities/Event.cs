@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using CalendarManager.Entities.Enum;
 
 namespace CalendarManager.Entities.Entities
 {
     public class Event
     {
-        public Event(string name, string description, DateTime eventDate, string local, string? participants, bool status)
+        public Event(string name, string description, DateTime eventDate, string local, string? participants)
         {
             Name = name;
             Description = description;
             EventDate = eventDate;
             Local = local;
             Participants = participants;
-            //Status = status;
+            Status = true;
             Type = string.IsNullOrEmpty(participants) ? EventType.Exclusive : EventType.Shared;
             UserCreatorId = 1;
             CreationDate = DateTime.UtcNow;

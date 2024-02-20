@@ -14,6 +14,5 @@ namespace CalendarManager.Application.Command
         public DateTime EventDate { get; set; }
         public string Local { get; set; }
         public string Participants { get; set; }
-        public bool Status { get; set; }
     }
 }
