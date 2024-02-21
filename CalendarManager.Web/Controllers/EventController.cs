@@ -1,17 +1,15 @@
 using AutoMapper;
-using CalendarManager.Application.Command;
+using CalendarManager.Application.Command.Requests;
+using CalendarManager.Application.Query.Requests;
 using CalendarManager.Entities.DTOs;
-using CalendarManager.Entities.Entities;
 using CalendarManager.Infraestructure.Context;
-using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.Tracing;
 
-namespace GerenciadorAgenda.Controllers
+namespace CalendarManager.Web.Controllers
 {
     [ApiController]
     [Route("api/events")]
-    [Authorize]
     public class EventController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -24,64 +22,55 @@ namespace GerenciadorAgenda.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateEvent([FromBody] CreateEventCommand command)
+        [Route ("/create")]
+        public async Task<IActionResult> CreateEvent([FromServices] IMediator mediator, [FromBody] CreateEventRequest command)
         {
-            var newEvent = _mapper.Map<Event>(command);
-            _context.Event.Add(newEvent);
-            _context.SaveChanges();
+            try
+            {
+                var result = await mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetEventById), new { id = newEvent.Id }, _mapper.Map<EventDto>(newEvent));
+                return CreatedAtAction(null , result);
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(new { message = "Erro ao criar o evento", error = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetEventById(int id)
+        public async Task<IActionResult> GetEventsByUserCreatorId([FromServices] IMediator mediator, int id)
         {
-            var existingEvent = _context.Event.Find(id);
-            if (existingEvent == null)
+            try
             {
-                return NotFound();
+                var request = new GetEventsByUserCreatorIdRequest
+                {
+                    UserCreatorId = id,
+                };
+
+                var result = await mediator.Send(request);
+
+                return CreatedAtAction(null, result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Erro ao criar o evento", error = ex.Message });
             }
 
-            return Ok(_mapper.Map<EventDto>(existingEvent));
         }
 
-        [HttpPut("{id}/activate")]
-        public IActionResult ActivateEvent(int id)
+        [HttpPut("/change-type")]
+        public async Task<IActionResult> ChangeEventTypeAsync([FromServices] IMediator mediator, [FromBody] ChangeEventTypeRequest command)
         {
-            var existingEvent = _context.Event.Find(id);
-            if (existingEvent == null)
+            try
             {
-                return NotFound();
+                var result = await mediator.Send(command);
+
+                return CreatedAtAction(null, result);
             }
-
-            existingEvent.Activate();
-            _context.SaveChanges();
-
-            return Ok(_mapper.Map<EventDto>(existingEvent));
-        }
-
-        [HttpPut("{id}/change-type")]
-        public IActionResult ChangeEventType(int id, [FromBody] ChangeEventTypeCommand command)
-        {
-            var existingEvent = _context.Event.Find(id);
-            if (existingEvent == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(new { message = "Não Existe evento com este Id", error = ex.Message });
             }
-
-            existingEvent.ChangeType(command.Type);
-            _context.SaveChanges();
-
-            return Ok(_mapper.Map<EventDto>(existingEvent));
-        }
-
-        [HttpGet]
-        public IActionResult GetAllEvents()
-        {
-            var events = _context.Event.ToList();
-            var eventDtos = _mapper.Map<List<EventDto>>(events);
-
-            return Ok(eventDtos);
         }
 
         [HttpDelete("{id}")]

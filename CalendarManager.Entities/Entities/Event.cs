@@ -14,7 +14,7 @@ namespace CalendarManager.Entities.Entities
             Participants = participants;
             Status = true;
             Type = string.IsNullOrEmpty(participants) ? EventType.Exclusive : EventType.Shared;
-            UserCreatorId = 1;
+            UserCreatorId = 2;
             CreationDate = DateTime.UtcNow;
             UpdateDate = DateTime.UtcNow;
         }

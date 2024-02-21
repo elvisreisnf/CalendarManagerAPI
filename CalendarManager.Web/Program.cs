@@ -1,13 +1,18 @@
 using CalendarManager.Application.Mapper;
 using CalendarManager.Application.Utils;
 using CalendarManager.Infraestructure.Context;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+
 
 builder.Services.AddAutoMapper(typeof(Program));
 

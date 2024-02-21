@@ -1,7 +1,9 @@
 using AutoMapper;
+using CalendarManager.Application.Command.Requests;
 using CalendarManager.Entities.DTOs;
 using CalendarManager.Entities.Entities;
 using CalendarManager.Infraestructure.Context;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Protocol.Plugins;
@@ -9,7 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace GerenciadorAgenda.Controllers
+namespace CalendarManager.Web.Controllers
 {
     [ApiController]
     [Route("api/auth")]
@@ -24,22 +26,20 @@ namespace GerenciadorAgenda.Controllers
             _context = context;
         }
 
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] UserDto user)
+        [HttpPost]
+        [Route ("/login")]
+        public async Task<IActionResult> Login([FromServices] IMediator mediator, [FromBody] LoginRequest command)
         {
-            var existingUser = _context.User
-                 .FirstOrDefault(u => u.Username == user.Username && u.Password == user.Password);
+            try
+            {
+                var result = await mediator.Send(command);
 
-            if (existingUser == null)
-                return NotFound(new { message = "Usuário ou senha inválidos" });
-
-
-            var token = JwtTokenService.GenerateToken(existingUser);
-
-            existingUser.HidePassword("");
-            return Ok(new { User = existingUser,
-                Token = token });
-
+                return CreatedAtAction( null , result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Erro ao criar o evento", error = ex.Message });
+            }
         }
     }
 }
