@@ -3,7 +3,6 @@ using CalendarManager.Application.Command.Requests;
 using CalendarManager.Application.Command.Responses;
 using CalendarManager.Infraestructure.Context;
 using MediatR;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CalendarManager.Application.Handlers
 {

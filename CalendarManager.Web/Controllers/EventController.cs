@@ -4,12 +4,14 @@ using CalendarManager.Application.Query.Requests;
 using CalendarManager.Entities.DTOs;
 using CalendarManager.Infraestructure.Context;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalendarManager.Web.Controllers
 {
     [ApiController]
     [Route("api/events")]
+    [Authorize]
     public class EventController : ControllerBase
     {
         private readonly IMapper _mapper;

@@ -17,10 +17,13 @@ public class JwtTokenService
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
+                //Num sistema em produção poderiam ser adicionadas outras claims como perfis...
                 new Claim(ClaimTypes.Name, user.Username.ToString())
             }),
             Expires = DateTime.UtcNow.AddHours(2),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256),
+            Audience = "CalendarManager",
+            Issuer = "EuMesmo",
         };
 
         var token = tokenHandler.CreateToken(tokenDescripotor);

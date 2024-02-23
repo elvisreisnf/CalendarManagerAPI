@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,7 +63,10 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = true,
-        ValidateAudience = true,        
+        ValidateAudience = true,
+        //sei que essas formas de audience e issuer não são as usuais e corretas , mas fiz assim para este projeto
+        ValidAudience = "CalendarManager",
+        ValidIssuer = "EuMesmo"
     };
 });
 
