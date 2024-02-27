@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddCors();
+
 
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -71,6 +73,11 @@ builder.Services.AddAuthentication(x =>
 });
 
 var app = builder.Build();
+
+app.UseCors(builder =>
+        builder.WithOrigins("http://localhost:5173") 
+            .AllowAnyHeader()
+            .AllowAnyMethod());
 
 if (app.Environment.IsDevelopment())
 {
