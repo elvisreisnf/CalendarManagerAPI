@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CalendarManager.Application.Query.Responses
 {
-    public class GetEventsByUserCreatorIdResponse
+    public class GetEventsByLoggedUserResponse
     {
         public List<EventDto> Events { get; set; }
     }

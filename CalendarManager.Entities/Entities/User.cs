@@ -4,6 +4,7 @@ namespace CalendarManager.Entities.Entities
 {
     public class User
     {
+
         public User( string username, string password)
         {
             Username = username;

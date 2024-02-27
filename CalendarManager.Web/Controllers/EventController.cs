@@ -1,7 +1,9 @@
 using AutoMapper;
 using CalendarManager.Application.Command.Requests;
 using CalendarManager.Application.Query.Requests;
+using CalendarManager.Application.Utils;
 using CalendarManager.Entities.DTOs;
+using CalendarManager.Entities.Entities;
 using CalendarManager.Infraestructure.Context;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -16,11 +18,13 @@ namespace CalendarManager.Web.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _context;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public EventController(IMapper mapper, ApplicationDbContext context)
+        public EventController(IMapper mapper, ApplicationDbContext context, IHttpContextAccessor contextAccessor)
         {
             _mapper = mapper;
             _context = context;
+            _contextAccessor = contextAccessor;
         }
 
         [HttpPost]
@@ -29,6 +33,9 @@ namespace CalendarManager.Web.Controllers
         {
             try
             {
+                UserService userService = new UserService(_context, _contextAccessor);
+                command.SetUserCreatorId(userService.GetLoggedId());
+
                 var result = await mediator.Send(command);
 
                 return CreatedAtAction(null , result);
@@ -39,14 +46,17 @@ namespace CalendarManager.Web.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetEventsByUserCreatorId([FromServices] IMediator mediator, int id)
+        [HttpGet()]
+        public async Task<IActionResult> GetEventsByLoggedUser([FromServices] IMediator mediator)
         {
             try
             {
-                var request = new GetEventsByUserCreatorIdRequest
+                UserService userService = new UserService(_context, _contextAccessor);
+                var username = userService.GetLoggedUsername();
+
+                var request = new GetEventsByLoggedUserRequest
                 {
-                    UserCreatorId = id,
+                    Username = username,
                 };
 
                 var result = await mediator.Send(request);
@@ -65,6 +75,9 @@ namespace CalendarManager.Web.Controllers
         {
             try
             {
+                UserService userService = new UserService(_context, _contextAccessor);
+                command.SetUserCreatorId(userService.GetLoggedId());
+
                 var result = await mediator.Send(command);
 
                 return CreatedAtAction(null, result);
@@ -73,21 +86,6 @@ namespace CalendarManager.Web.Controllers
             {
                 return BadRequest(new { message = "Não Existe evento com este Id", error = ex.Message });
             }
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteEvent(int id)
-        {
-            var existingEvent = _context.Event.Find(id);
-            if (existingEvent == null)
-            {
-                return NotFound();
-            }
-
-            _context.Event.Remove(existingEvent);
-            _context.SaveChanges();
-
-            return NoContent();
         }
     }
 }

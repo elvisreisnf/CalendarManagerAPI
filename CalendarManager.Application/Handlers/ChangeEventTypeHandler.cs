@@ -21,21 +21,39 @@ namespace CalendarManager.Application.Handlers
         {
             var existingEvent = _context.Event.Find(request.Id);
 
-            if (existingEvent == null)
-                throw new NotImplementedException();
+            if (existingEvent == null || existingEvent.UserCreatorId != request.UserCreatorId)
+                throw new NotImplementedException("Evento não encontrado ou bloqueado para operação");
 
 
             if (request.Type == Entities.Enum.EventType.Exclusive)
+            {
                 existingEvent.ChangeParticipants("");
+                existingEvent.ChangeType(request.Type);
+                _context.SaveChanges();
 
-            existingEvent.ChangeType(request.Type);
-            
-            _context.SaveChanges();
+                return Task.FromResult(new ChangeEventTypeResponse
+                {
+                    Id = existingEvent.Id,
+                    Type = existingEvent.Type,
+                    Participants = existingEvent.Participants,
+                    Message = "Mudança de tipo executada com sucesso",
+                });
+            }
+            else
+            {
+                existingEvent.ChangeType(request.Type);
+                existingEvent.ChangeParticipants(request.Participants);
 
-            return Task.FromResult(new ChangeEventTypeResponse { Id = existingEvent.Id, 
-                                                                Type = existingEvent.Type, 
-                                                                Message = "Mudança de tipo executada com sucesso",
-            });
+                _context.SaveChanges();
+
+                return Task.FromResult(new ChangeEventTypeResponse
+                {
+                    Id = existingEvent.Id,
+                    Type = existingEvent.Type,
+                    Participants = existingEvent.Participants,
+                    Message = "Mudança de tipo executada com sucesso",
+                });
+            }
         }
     }
 }

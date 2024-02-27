@@ -1,5 +1,11 @@
-﻿using CalendarManager.Application.Utils;
+﻿using AutoMapper;
+using CalendarManager.Application.Command.Requests;
+using CalendarManager.Application.Query.Responses;
+using CalendarManager.Application.Utils;
+using CalendarManager.Entities.DTOs;
 using CalendarManager.Entities.Entities;
+using CalendarManager.Infraestructure.Context;
+using MediatR;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,6 +14,16 @@ using System.Text;
 
 public class JwtTokenService
 {
+
+    private readonly IMapper _mapper;
+    private readonly ApplicationDbContext _context;
+
+    public JwtTokenService(IMapper mapper, ApplicationDbContext context)
+    {
+        _context = context;
+        _mapper = mapper;
+    }
+
     public static string GenerateToken(User user)
     {
 
@@ -29,4 +45,6 @@ public class JwtTokenService
         var token = tokenHandler.CreateToken(tokenDescripotor);
         return tokenHandler.WriteToken(token);
     }
+
+   
 }

@@ -8,5 +8,14 @@ namespace CalendarManager.Application.Command.Requests
     {
         public int Id { get; set; }
         public EventType Type { get; set; }
+        public string? Participants { get; set; }
+        public int UserCreatorId { get; private set; }
+
+
+        public void SetUserCreatorId(int userId)
+        {
+            UserCreatorId = userId;
+        }
     }
+
 }

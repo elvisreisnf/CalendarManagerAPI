@@ -5,8 +5,8 @@ using MediatR;
 
 namespace CalendarManager.Application.Query.Requests
 {
-    public class GetEventsByUserCreatorIdRequest : IRequest<GetEventsByUserCreatorIdResponse>
+    public class GetEventsByLoggedUserRequest : IRequest<GetEventsByLoggedUserResponse>
     {
-        public int UserCreatorId { get; set; }
+        public string Username { get; set; }
     }
 }

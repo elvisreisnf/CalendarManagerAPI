@@ -5,7 +5,7 @@ namespace CalendarManager.Entities.Entities
 {
     public class Event
     {
-        public Event(string name, string description, DateTime eventDate, string local, string? participants)
+        public Event(string name, string description, DateTime eventDate, string local, string? participants, int userCreatorId)
         {
             Name = name;
             Description = description;
@@ -14,7 +14,7 @@ namespace CalendarManager.Entities.Entities
             Participants = participants;
             Status = true;
             Type = string.IsNullOrEmpty(participants) ? EventType.Exclusive : EventType.Shared;
-            UserCreatorId = 2;
+            UserCreatorId = userCreatorId;
             CreationDate = DateTime.UtcNow;
             UpdateDate = DateTime.UtcNow;
         }
