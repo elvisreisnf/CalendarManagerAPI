@@ -33,12 +33,12 @@ namespace CalendarManager.Web.Controllers
             try
             {
                 var result = await mediator.Send(command);
-
-                return CreatedAtAction( null , result);
+                var retorno = Ok(new { success = true, data = new { result } });
+                return retorno;
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = "Erro ao criar o evento", error = ex.Message });
+                return BadRequest(new { message = "Erro ao fazer login", error = ex.Message });
             }
         }
     }

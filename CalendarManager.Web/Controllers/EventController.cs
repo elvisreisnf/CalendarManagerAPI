@@ -48,6 +48,7 @@ namespace CalendarManager.Web.Controllers
 
         [HttpGet()]
         public async Task<IActionResult> GetEventsByLoggedUser([FromServices] IMediator mediator)
+        
         {
             try
             {
@@ -61,7 +62,7 @@ namespace CalendarManager.Web.Controllers
 
                 var result = await mediator.Send(request);
 
-                return CreatedAtAction(null, result);
+                return Ok(result);
             }
             catch (Exception ex)
             {
